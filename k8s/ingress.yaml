@@ -1,0 +1,30 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: qwen-api-ingress
+  namespace: default
+  annotations:
+    # Nginx Ingress 配置
+    nginx.ingress.kubernetes.io/proxy-body-size: "50m"
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "600"
+    nginx.ingress.kubernetes.io/proxy-send-timeout: "600"
+    # 如果需要 WebSocket 支持（流式输出）
+    # nginx.ingress.kubernetes.io/websocket-services: "qwen-api-service"
+spec:
+  ingressClassName: nginx  # 根据你的 Ingress Controller 修改
+  rules:
+  - host: qwen-api.example.com  # 替换为你的域名
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: qwen-api-service
+            port:
+              number: 8000
+  # TLS 配置（可选）
+  # tls:
+  # - hosts:
+  #   - qwen-api.example.com
+  #   secretName: qwen-api-tls

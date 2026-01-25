@@ -1,0 +1,153 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# 虚拟环境
+venv/
+env/
+ENV/
+env.bak/
+venv.bak/
+.venv/
+conda_env/
+
+# PyCharm
+.idea/
+
+# VS Code
+.vscode/
+*.code-workspace
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# pyenv
+.python-version
+
+# pipenv
+Pipfile.lock
+
+# poetry
+poetry.lock
+
+# 模型文件（通常很大，不应该提交到 Git）
+Qwen3-4B-Instruct-2507/
+models/
+*.bin
+*.safetensors
+*.pt
+*.pth
+*.ckpt
+*.h5
+*.onnx
+*.pb
+
+# 日志文件
+*.log
+logs/
+*.log.*
+
+# 数据库
+*.db
+*.sqlite
+*.sqlite3
+
+# 环境变量文件
+.env
+.env.local
+.env.*.local
+*.env
+
+# 操作系统文件
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+Desktop.ini
+
+# 临时文件
+*.tmp
+*.temp
+*.swp
+*.swo
+*~
+.cache/
+.tmp/
+
+# 测试覆盖率
+.coverage
+.coverage.*
+htmlcov/
+.pytest_cache/
+.tox/
+.hypothesis/
+
+# mypy
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# 备份文件
+*.bak
+*.backup
+*~
+
+# Docker
+
+# Kubernetes 敏感信息（如果有）
+k8s/secrets.yaml
+k8s/*-secret.yaml
+
+# 项目特定
+test_client_backup.py
+*.md.bak
+
+# 压缩文件（如果包含模型）
+*.zip
+*.tar
+*.tar.gz
+*.tgz
+*.rar
+*.7z
+
+# 大文件
+*.large
+*.huge
+
+# 本地配置文件
+config.local.yaml
+settings.local.py
+
+# 数据文件
+data/
+datasets/
+*.csv
+*.json.bak
+
+# 输出文件
+output/
+results/
+checkpoints/

@@ -1,0 +1,57 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+*.egg-info/
+dist/
+build/
+
+# 虚拟环境
+venv/
+env/
+ENV/
+.venv
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# 系统文件
+.DS_Store
+Thumbs.db
+
+# 日志
+*.log
+
+# 测试文件（可选，如果需要测试可以注释掉）
+test_client.py
+test_client_backup.py
+test_curl.md
+
+# 备份文件
+*.backup
+*.bak
+
+# Windows 特定
+start_server.bat
+
+# Git
+.git/
+.gitignore
+
+# Docker
+Dockerfile
+.dockerignore
+docker-compose.yml
+DOCKER.md
+
+# 文档（可选）
+README.md
+
+# 模型文件（如果通过卷挂载，可以忽略）
+Qwen3-4B-Instruct-2507/

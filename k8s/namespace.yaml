@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: qwen
+  labels:
+    name: qwen
+    environment: production

@@ -1,0 +1,131 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: qwen-api
+  namespace: default
+  labels:
+    app: qwen-api
+    version: v1
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: qwen-api
+  template:
+    metadata:
+      labels:
+        app: qwen-api
+        version: v1
+    spec:
+      # 节点选择器
+      nodeSelector:
+        accelerator: nvidia-tesla-v100
+      
+      tolerations:
+      - key: nvidia.com/gpu
+        operator: Exists
+        effect: NoSchedule
+      
+      # Init Container - 从对象存储下载模型（可选方案）
+      initContainers:
+      - name: download-model
+        image: curlimages/curl:latest
+        command:
+        - sh
+        - -c
+        - |
+          echo "下载模型文件..."
+          # 示例：从 S3 下载（需要配置访问凭证）
+          # aws s3 sync s3://your-bucket/models/Qwen3-4B-Instruct-2507 /models/
+          
+          # 或从 HTTP 下载
+          # wget -O- https://example.com/models/qwen3-4b.tar.gz | tar -xz -C /models/
+          
+          # 或使用 git-lfs
+          # git clone --depth 1 https://huggingface.co/Qwen/Qwen3-4B-Instruct-2507 /models/
+          
+          echo "模型下载完成"
+        volumeMounts:
+        - name: model-storage
+          mountPath: /models
+        # 如果需要访问凭证，使用 Secret
+        # env:
+        # - name: AWS_ACCESS_KEY_ID
+        #   valueFrom:
+        #     secretKeyRef:
+        #       name: model-storage-secret
+        #       key: aws-access-key-id
+        # - name: AWS_SECRET_ACCESS_KEY
+        #   valueFrom:
+        #     secretKeyRef:
+        #       name: model-storage-secret
+        #       key: aws-secret-access-key
+      
+      containers:
+      - name: qwen-api
+        image: qwen-api:latest
+        imagePullPolicy: IfNotPresent
+        
+        ports:
+        - name: http
+          containerPort: 8000
+          protocol: TCP
+        
+        env:
+        - name: MODEL_PATH
+          value: "/app/models/Qwen3-4B-Instruct-2507"
+        - name: CUDA_VISIBLE_DEVICES
+          value: "0"
+        - name: PYTHONUNBUFFERED
+          value: "1"
+        
+        resources:
+          requests:
+            memory: "8Gi"
+            cpu: "2"
+            nvidia.com/gpu: 1
+          limits:
+            memory: "16Gi"
+            cpu: "4"
+            nvidia.com/gpu: 1
+        
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 8000
+          initialDelaySeconds: 300
+          periodSeconds: 30
+          timeoutSeconds: 10
+          failureThreshold: 3
+        
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 8000
+          initialDelaySeconds: 300
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 3
+        
+        volumeMounts:
+        - name: model-storage
+          mountPath: /app/models
+          readOnly: true
+        
+        lifecycle:
+          preStop:
+            exec:
+              command: ["/bin/sh", "-c", "sleep 10"]
+      
+      volumes:
+      - name: model-storage
+        emptyDir: {}  # 或使用 PVC
+        # persistentVolumeClaim:
+        #   claimName: qwen-model-pvc
+      
+      restartPolicy: Always
+      
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        fsGroup: 1000

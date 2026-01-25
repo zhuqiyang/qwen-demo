@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: qwen-api-config
+  namespace: default
+data:
+  # 应用配置
+  MODEL_PATH: "/app/models/Qwen3-4B-Instruct-2507"
+  PYTHONUNBUFFERED: "1"
+  
+  # 日志级别
+  LOG_LEVEL: "INFO"
+  
+  # API 配置
+  API_HOST: "0.0.0.0"
+  API_PORT: "8000"
