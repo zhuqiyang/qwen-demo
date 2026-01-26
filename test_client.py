@@ -7,7 +7,8 @@ import json
 import time
 import sys
 
-API_URL = "http://localhost:8000"
+# API_URL = "http://localhost:8000"
+API_URL = "http://172.29.128.244:8000"
 
 class ChatClient:
     def __init__(self, api_url=API_URL):

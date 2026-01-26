@@ -28,8 +28,7 @@ kubectl apply -k k8s/
 
 **快速开始：**
 ```bash
-# 使用 docker-compose
-docker-compose up -d
+docker run -d --name qwen-api --gpus all -p 8000:8000 -v $(pwd)/Qwen3-4B-Instruct-2507:/app/Qwen3-4B-Instruct-2507:ro qwen:0.1
 ```
 
 详细说明请查看 [DOCKER.md](DOCKER.md)
