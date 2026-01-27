@@ -17,27 +17,14 @@ spec:
         app: qwen-api
         version: v1
     spec:
-      # 节点选择器 - 选择有 GPU 的节点
-      nodeSelector:
-        accelerator: nvidia-tesla-v100  # 根据实际 GPU 类型修改，或使用 nvidia.com/gpu: "true"
-        # 或者使用: nvidia.com/gpu.product: "RTX-4080"
-      
-      # 容忍度 - 允许调度到有污点的 GPU 节点
-      tolerations:
-      - key: nvidia.com/gpu
-        operator: Exists
-        effect: NoSchedule
-      
       containers:
       - name: qwen-api
-        image: qwen-api:latest  # 替换为你的镜像仓库地址，如: registry.example.com/qwen-api:latest
+        image: qwen-api:latest
         imagePullPolicy: IfNotPresent
-        
         ports:
         - name: http
           containerPort: 8000
           protocol: TCP
-        
         env:
         - name: MODEL_PATH
           value: "/app/models/Qwen3-4B-Instruct-2507"
@@ -45,19 +32,15 @@ spec:
           value: "0"
         - name: PYTHONUNBUFFERED
           value: "1"
-        
-        # 资源限制
         resources:
           requests:
             memory: "8Gi"
             cpu: "2"
-            nvidia.com/gpu: 1  # 请求 1 个 GPU
+            nvidia.com/gpu: 1
           limits:
             memory: "16Gi"
             cpu: "4"
-            nvidia.com/gpu: 1  # 限制 1 个 GPU
-        
-        # 健康检查
+            nvidia.com/gpu: 1
         livenessProbe:
           httpGet:
             path: /health
@@ -66,7 +49,6 @@ spec:
           periodSeconds: 30
           timeoutSeconds: 10
           failureThreshold: 3
-        
         readinessProbe:
           httpGet:
             path: /health
@@ -75,29 +57,16 @@ spec:
           periodSeconds: 10
           timeoutSeconds: 5
           failureThreshold: 3
-        
-        # 卷挂载 - 模型文件
         volumeMounts:
         - name: model-storage
           mountPath: /app/models
           readOnly: true
-        
-        # 启动和停止命令
         lifecycle:
           preStop:
             exec:
-              command: ["/bin/sh", "-c", "sleep 10"]  # 优雅关闭
-        
+              command: ["/bin/sh", "-c", "sleep 10"]
       volumes:
       - name: model-storage
         persistentVolumeClaim:
           claimName: qwen-model-pvc
-      
-      # 重启策略
       restartPolicy: Always
-      
-      # 安全上下文
-      securityContext:
-        runAsNonRoot: true
-        runAsUser: 1000
-        fsGroup: 1000

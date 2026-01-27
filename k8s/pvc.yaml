@@ -5,16 +5,13 @@ metadata:
   namespace: default
 spec:
   accessModes:
-    - ReadOnlyMany  # 只读，多个 Pod 可以同时挂载
-  storageClassName: standard  # 根据你的存储类修改
+    - ReadOnlyMany
+  storageClassName: local-storage
   resources:
     requests:
-      storage: 20Gi  # 根据模型大小调整，Qwen3-4B 大约需要 8-10GB
-  # 如果需要使用已有的 PV，取消下面的注释并指定 volumeName
-  # volumeName: qwen-model-pv
-
+      storage: 20Gi
+  volumeName: qwen-model-pv
 ---
-# 如果需要创建 PersistentVolume（本地存储示例）
 apiVersion: v1
 kind: PersistentVolume
 metadata:
@@ -27,7 +24,6 @@ spec:
     - ReadOnlyMany
   persistentVolumeReclaimPolicy: Retain
   storageClassName: local-storage
-  # 本地路径存储（需要节点上有对应路径）
   local:
     path: /data/qwen-models
   nodeAffinity:
@@ -37,8 +33,4 @@ spec:
         - key: kubernetes.io/hostname
           operator: In
           values:
-          - node-name  # 替换为实际的节点名称
-  # 或者使用 NFS
-  # nfs:
-  #   server: nfs-server.example.com
-  #   path: /exports/qwen-models
+          - node-name
