@@ -17,6 +17,7 @@ spec:
         app: qwen-api
         version: v1
     spec:
+      runtimeClassName: nvidia
       containers:
       - name: qwen-api
         image: qwen-api:latest
