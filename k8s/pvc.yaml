@@ -33,4 +33,4 @@ spec:
         - key: kubernetes.io/hostname
           operator: In
           values:
-          - node-name
+          - node-name # 需要替换为实际的有GPU的节点名称
